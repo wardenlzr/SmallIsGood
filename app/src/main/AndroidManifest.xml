@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.warden.apk1">
+
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:label="Apk.1安装器"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Translucent.NoTitleBar">
+        <activity android:name=".A">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:mimeType="application/apk.1" />
+                <data android:mimeType="application/apk.1.1" />
+                <data android:mimeType="application/apk.1.1.1" />
+                <data android:mimeType="application/apk.1.1.1.1" />
+                <data android:mimeType="application/apk.1.1.1.1.1" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+            </intent-filter>
+        </activity>
+        <provider
+            android:name=".fp.FileProvider"
+            android:authorities="com.warden.apk1.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+    </application>
+
+</manifest>
