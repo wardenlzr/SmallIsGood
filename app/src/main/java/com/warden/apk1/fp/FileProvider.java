@@ -27,23 +27,12 @@ import java.util.Map.Entry;
 
 public class FileProvider extends ContentProvider {
     private static final String[] COLUMNS = new String[]{"_display_name", "_size"};
-    private static final String META_DATA_FILE_PROVIDER_PATHS = "android.support.FILE_PROVIDER_PATHS";
-    private static final String TAG_ROOT_PATH = "root-path";
-    private static final String TAG_FILES_PATH = "files-path";
-    private static final String TAG_CACHE_PATH = "cache-path";
-    private static final String TAG_EXTERNAL = "external-path";
-    private static final String TAG_EXTERNAL_FILES = "external-files-path";
-    private static final String TAG_EXTERNAL_CACHE = "external-cache-path";
-    private static final String TAG_EXTERNAL_MEDIA = "external-media-path";
-    private static final String ATTR_NAME = "name";
-    private static final String ATTR_PATH = "path";
     private static final File DEVICE_ROOT = new File("/");
     @GuardedBy("sCache")
     private static HashMap<String, FileProvider.PathStrategy> sCache = new HashMap();
     private FileProvider.PathStrategy mStrategy;
 
-    public FileProvider() {
-    }
+    public FileProvider() {}
 
     public boolean onCreate() {
         return true;
