@@ -36,14 +36,6 @@ public class MainAct extends BaseAct {
         lv = findViewById(R.id.lv);
         pb = findViewById(R.id.pb);
 //        list.addAll(DataUtils.testData(10, AppInfo.class));
-        lv.setOnItemClickListener((parent, view, position, id) -> {
-            AppInfo item = (AppInfo) adapter.mDatas.get(position);
-            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            // 将文本内容放到系统剪贴板里。
-            assert cm != null;
-            cm.setText(item.pkgName);
-            toast("包名已复制到粘贴板");
-        });
         lv.setAdapter(adapter = new BaseListAdapter<AppInfo>(null, R.layout.item_appinfo) {
             @Override
             public void convert(ViewHolder helper, final AppInfo item, final int i) {
@@ -60,8 +52,15 @@ public class MainAct extends BaseAct {
                     }
                     startActivity(item.intent);
                 });
+                helper.getConvertView().setOnClickListener(v -> {
+                    ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                    // 将文本内容放到系统剪贴板里。
+                    assert cm != null;
+                    cm.setText(item.pkgName);
+                    toast("包名已复制到粘贴板");
+                });
                 helper.getView(R.id.iv_delete).setOnClickListener(v -> new AlertDialog.Builder(activity)
-                        .setTitle("确认卸载？卸载后此应用数据也会清空。")
+                        .setTitle("确认卸载？卸载后此应用数据也会清空")
                         .setPositiveButton("取消", (dialog, which) -> dialog.dismiss())
                         .setNegativeButton("确定", (dialog, which) -> {
                             clickPos = i;

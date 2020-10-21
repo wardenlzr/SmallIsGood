@@ -1,6 +1,7 @@
 package com.warden.apn.task;
 
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
 import com.warden.apn.MainAct;
@@ -10,6 +11,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -36,40 +38,58 @@ public class QueryApp extends Thread {
     private List<AppInfo> queryFilterAppInfo(int filter) {
         pm = act.getPackageManager();
         // 查询所有已经安装的应用程序
-        List<ApplicationInfo> listAppcations = act.getPackageManager()
-                .getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
-        Collections.sort(listAppcations,
-                new ApplicationInfo.DisplayNameComparator(act.getPackageManager()));// 排序
-        List<AppInfo> appInfos = new ArrayList<AppInfo>(); // 保存过滤查到的AppInfo
+//        List<ApplicationInfo> applications = pm.getInstalledApplications(PackageManager.GET_UNINSTALLED_PACKAGES);
+        List<PackageInfo> applications = pm.getInstalledPackages(0);
+
+        /*Collections.sort(applications, new Comparator<PackageInfo>() {
+            @Override
+            public int compare(PackageInfo o1, PackageInfo o2) {
+                return ((String) o1.applicationInfo.loadLabel(pm)).compareTo(((String) o2.applicationInfo.loadLabel(pm)));
+            }
+        });*/
+//        Collections.sort(applications, new ApplicationInfo.DisplayNameComparator(act.getPackageManager()));// 排序
+        List<AppInfo> appInfos = new ArrayList<>(); // 保存过滤查到的AppInfo
         // 根据条件来过滤
         switch (filter) {
             case 0: // 所有应用程序
                 appInfos.clear();
-                for (ApplicationInfo app : listAppcations) {
-                    appInfos.add(getAppInfo(app));
+                for (PackageInfo app : applications) {
+                    AppInfo appInfo = getAppInfo(app);
+                    if (appInfo != null) {
+                        appInfos.add(appInfo);
+                    }
                 }
                 return appInfos;
             case 1: // 系统程序
                 appInfos.clear();
-                for (ApplicationInfo app : listAppcations) {
-                    if ((app.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
-                        appInfos.add(getAppInfo(app));
+                for (PackageInfo app : applications) {
+                    if ((app.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+                        AppInfo appInfo = getAppInfo(app);
+                        if (appInfo != null) {
+                            appInfos.add(appInfo);
+                        }
                     }
                 }
                 return appInfos;
             case 2: // 第三方应用程序
                 appInfos.clear();
-                for (ApplicationInfo app : listAppcations) {
-                    if ((app.flags & ApplicationInfo.FLAG_SYSTEM) <= 0) {
-                        appInfos.add(getAppInfo(app));
+                for (PackageInfo app : applications) {
+                    if ((app.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) <= 0) {
+                        AppInfo appInfo = getAppInfo(app);
+                        if (appInfo != null) {
+                            appInfos.add(appInfo);
+                        }
                     }
                 }
                 break;
             case 3: // 安装在SDCard的应用程序
                 appInfos.clear();
-                for (ApplicationInfo app : listAppcations) {
-                    if ((app.flags & ApplicationInfo.FLAG_EXTERNAL_STORAGE) != 0) {
-                        appInfos.add(getAppInfo(app));
+                for (PackageInfo app : applications) {
+                    if ((app.applicationInfo.flags & ApplicationInfo.FLAG_EXTERNAL_STORAGE) != 0) {
+                        AppInfo appInfo = getAppInfo(app);
+                        if (appInfo != null) {
+                            appInfos.add(appInfo);
+                        }
                     }
                 }
                 return appInfos;
@@ -80,18 +100,18 @@ public class QueryApp extends Thread {
     }
 
     // 构造一个AppInfo对象 ，并赋值
-    public AppInfo getAppInfo(ApplicationInfo app) {
+    public AppInfo getAppInfo(PackageInfo app) {
         if (app == null) {
             return null;
         }
         AppInfo appInfo = new AppInfo();
-        appInfo.appLabel = ((String) app.loadLabel(pm));
-        appInfo.appIcon = (app.loadIcon(pm));
+        appInfo.appLabel = ((String) app.applicationInfo.loadLabel(pm));
+        appInfo.appIcon = (app.applicationInfo.loadIcon(pm));
         appInfo.pkgName = (app.packageName);
         appInfo.intent = (pm.getLaunchIntentForPackage(app.packageName));
         try {
             //获取应用数据大小
-            long length = new File(app.sourceDir).length();
+            long length = new File(app.applicationInfo.sourceDir).length();
             //转换为 M
             float size = length * 1f / 1024 / 1024;
             appInfo.size = (get2Decimal(size) + "M");
