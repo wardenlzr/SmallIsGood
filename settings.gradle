@@ -1,5 +1,5 @@
 include ':lib'
 include ':apk1'
-//include ':pkg'
-//include ':lockscreen'
+include ':pkg'
+include ':lockscreen'
 rootProject.name = "SmallIsGood"
