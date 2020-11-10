@@ -1,4 +1,4 @@
-package com.warden.apn;
+package com.warden.pkg;
 
 
 import android.app.AlertDialog;
@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
-import com.warden.apn.bean.AppInfo;
-import com.warden.apn.task.QueryApp;
+import com.warden.pkg.bean.AppInfo;
+import com.warden.pkg.task.QueryApp;
 import com.warden.lib.base.BaseAct;
 import com.warden.lib.base.BaseListAdapter;
 

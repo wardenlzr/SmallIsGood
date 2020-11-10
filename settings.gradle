@@ -1,5 +1,5 @@
 include ':lib'
 //include ':app'
-//include ':apn'
-include ':lockscreen'
+include ':pkg'
+//include ':lockscreen'
 rootProject.name = "Smallisgood"

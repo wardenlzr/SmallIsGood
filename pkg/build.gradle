@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.warden.apn"
+        applicationId "com.warden.pkg"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1

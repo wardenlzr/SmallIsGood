@@ -1,11 +1,11 @@
-package com.warden.apn.task;
+package com.warden.pkg.task;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 
-import com.warden.apn.MainAct;
-import com.warden.apn.bean.AppInfo;
+import com.warden.pkg.MainAct;
+import com.warden.pkg.bean.AppInfo;
 
 import java.io.File;
 import java.text.DecimalFormat;

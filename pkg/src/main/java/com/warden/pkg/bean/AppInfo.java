@@ -1,4 +1,4 @@
-package com.warden.apn.bean;
+package com.warden.pkg.bean;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
