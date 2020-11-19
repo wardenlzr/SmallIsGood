@@ -4,9 +4,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/lockscreen"
+        android:icon="@mipmap/t"
         android:supportsRtl="true"
-        android:label="Lock"
+        android:label="       "
         android:theme="@style/AppTheme">
         <activity android:name=".LockAct">
             <intent-filter>
