@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Light.NoTitleBar">
+        <!-- true: status栏会有一层阴影；false: status栏没有阴影-->
+        <item name="android:windowTranslucentStatus">false</item>
+        <!-- 使底部导航栏透明 -->
+        <item name="android:windowTranslucentNavigation">true</item>
+        <!-- 给status栏设置透明颜色 -->
+        <item name="android:statusBarColor">#00000000</item>
+    </style>
+</resources>
