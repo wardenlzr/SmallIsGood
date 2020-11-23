@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainAct">
+
+    <ProgressBar
+        android:id="@+id/pb"
+        style="@android:style/Widget.Material.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:padding="16sp"
+        android:textIsSelectable="true"
+        android:textColor="#333333"
+        android:textSize="16sp"
+        tools:text="有时候，只要你下定决心做某件事，全世界都会拖你后腿。" />
+
+   <!-- <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/tv"
+        android:textSize="13sp"
+        android:text="(单击复制全文,长按可自由复制)"
+        android:textColor="#999999"
+        tools:ignore="HardcodedText" />-->
+
+</RelativeLayout>

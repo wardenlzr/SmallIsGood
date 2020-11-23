@@ -11,11 +11,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/apk1" />
-            <option value="$PROJECT_DIR$/civilcode" />
+            <option value="$PROJECT_DIR$/djt" />
             <option value="$PROJECT_DIR$/lib" />
-            <option value="$PROJECT_DIR$/lockscreen" />
-            <option value="$PROJECT_DIR$/pkg" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

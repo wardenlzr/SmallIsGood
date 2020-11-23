@@ -1,6 +1,8 @@
-include ':civilcode'
 include ':lib'
-include ':apk1'
-include ':pkg'
-include ':lockscreen'
+
+//include ':civilcode'
+//include ':apk1'
+//include ':pkg'
+include ':djt'
+//include ':lockscreen'
 rootProject.name = "SmallIsGood"
