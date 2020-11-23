@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.warden.djt">
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -9,7 +10,9 @@
         android:label="毒鸡汤"
         android:supportsRtl="true"
         android:icon="@drawable/djt"
-        android:theme="@style/AppTheme">
+        android:usesCleartextTraffic="true"
+        android:theme="@style/AppTheme"
+        tools:targetApi="m">
         <activity android:name=".MainAct">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
