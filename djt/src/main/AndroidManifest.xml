@@ -12,8 +12,10 @@
         android:icon="@drawable/djt"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"
+        android:networkSecurityConfig="@xml/network_security_config"
         tools:targetApi="m">
-        <activity android:name=".MainAct">
+        <activity android:name=".MainAct"
+            android:configChanges="uiMode">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER"/>

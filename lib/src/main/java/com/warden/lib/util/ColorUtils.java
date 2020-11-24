@@ -2,6 +2,9 @@ package com.warden.lib.util;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.view.View;
 
 import com.warden.lib.base.BaseApp;
 
@@ -18,6 +21,75 @@ public class ColorUtils {
 
     private ColorUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
+    }
+
+    //获取父类的背景颜色(如果没有,在往上一级)
+    public static String obtainBgColor(View v) {
+        try {
+            Drawable background = v.getBackground();
+            if (background == null) {
+                return obtainBgColor((View)v.getParent());
+            } else {
+                ColorDrawable colorDrawable = (ColorDrawable)background;
+                int color = colorDrawable.getColor();
+                return int2HexColor(color);
+            }
+        } catch (Exception var4) {
+            var4.printStackTrace();
+            return "#FFFFFFFF";
+        }
+    }
+
+    //将int颜色代码 转换为 十六进制
+    public static String int2HexColor(int color) {
+        StringBuffer sb = new StringBuffer();
+        String R = Integer.toHexString(Color.red(color));
+        String G = Integer.toHexString(Color.green(color));
+        String B = Integer.toHexString(Color.blue(color));
+        R = R.length() == 1 ? "0" + R : R;
+        G = G.length() == 1 ? "0" + G : G;
+        B = B.length() == 1 ? "0" + B : B;
+        sb.append("#");
+        sb.append(R);
+        sb.append(G);
+        sb.append(B);
+        return sb.toString();
+    }
+
+    //将十六进制 颜色代码 转换为 int
+    public static int hex2IntColor(String color) {
+        /*String reg = "#[a-f0-9A-F]{8}";
+        if (!Pattern.matches(reg, color)) {
+            color = "#ffffffff";
+        }*/
+        return Color.parseColor(color);
+    }
+    //反转颜色(黑色变成白色)
+    public static String reserveColor(String originalColor) {
+        StringBuilder sb = (new StringBuilder()).append("#");
+        if (!originalColor.startsWith("#")) {
+            originalColor = "#" + originalColor;
+        }
+
+        int start = originalColor.length() == 9 ? 3 : 1;
+
+        for(int i = start; i < originalColor.length(); ++i) {
+            String st = originalColor.charAt(i) + "";
+            int temp = Integer.parseInt(st, 16);
+            sb.append("" + Integer.toHexString(15 - temp).toUpperCase());
+        }
+
+        return sb.toString();
+    }
+
+    //判断是否是浅色
+    public static boolean isLightColor(int color) {
+        double darkness = 1 - (0.299 * Color.red(color) + 0.587 * Color.green(color) + 0.114 * Color.blue(color)) / 255;
+        if (darkness < 0.5) {
+            return true; // It's a light color
+        } else {
+            return false; // It's a dark color
+        }
     }
 
     //获取一个随机颜色
@@ -53,18 +125,7 @@ public class ColorUtils {
         return color;
     }
 
-    /**
-     * 将十六进制 颜色代码 转换为 int
-     *
-     * @return color
-     */
-    public static int hex2IntColor(String color) {
-        String reg = "#[a-f0-9A-F]{8}";
-        if (!Pattern.matches(reg, color)) {
-            color = "#ffffffff";
-        }
-        return Color.parseColor(color);
-    }
+
 
     /**
      * 设置颜色透明度

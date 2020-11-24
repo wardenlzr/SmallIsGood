@@ -1,6 +1,8 @@
 package com.warden.djt;
 
 
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -8,10 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.warden.lib.base.BaseAct;
-import com.warden.lib.util.ClipboardUtils;
 import com.warden.lib.util.ColorUtils;
 import com.warden.lib.util.HttpUtils;
-import com.warden.lib.util.ToastUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,11 +35,34 @@ public class MainAct extends BaseAct {
         root.setOnClickListener(v -> getData());
         root.setBackgroundColor(ColorUtils.getRandomBGColor());
 
+        boolean isDarkMode = (this.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        loge("isDarkMode:" + isDarkMode);
+        if (isDarkMode) {
+            tv.setTextColor(Color.YELLOW);
+        } else {
+            tv.setTextColor(Color.BLACK);
+        }
         /*tv.setOnClickListener(v -> {
             ClipboardUtils.copy(tv.getText().toString());
             toast("内容已复制");
         });*/
         getData();
+    }
+
+    //manifest中配置android:configChanges="uiMode"才会走此方法
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //判断是否是深色模式
+        //    android:forceDarkAllowed="false"禁止使用深色模式
+        //val isDarkMode = this.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK===Configuration.UI_MODE_NIGHT_YES
+        boolean isDarkMode = (this.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+        loge("isDarkMode:" + isDarkMode);
+        if (isDarkMode) {
+            tv.setTextColor(Color.YELLOW);
+        } else {
+            tv.setTextColor(Color.BLACK);
+        }
     }
 
     private void getData() {
@@ -48,13 +71,21 @@ public class MainAct extends BaseAct {
             @Override
             public void ok(String result) {
                 try {
+                    loge(result);
                     pb.setVisibility(View.GONE);
                     root.setBackgroundColor(ColorUtils.getRandomBGColor());
                     JSONObject jsonObject = new JSONObject(result);
-                    String data = jsonObject.getString("data");
+                    String status = jsonObject.getString("status");
+                    String data = "";
+                    if (status.equals("1")) {
+                        data = jsonObject.getString("data");
+                    } else {
+                        data = jsonObject.getString("info");
+                    }
                     tv.setText(data);
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    tv.setText("没有毒鸡汤, 好好努力就行了");
                 }
             }
 
