@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.warden.lib.base.BaseAct;
+import com.warden.lib.util.AppUtils;
 import com.warden.lib.util.ColorUtils;
 import com.warden.lib.util.HttpUtils;
 
@@ -24,6 +25,7 @@ public class MainAct extends BaseAct {
     private RelativeLayout root;
     private TextView tv;
     private ProgressBar pb;
+    private Long time = 0l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,13 @@ public class MainAct extends BaseAct {
         root = findViewById(R.id.root);
         tv = findViewById(R.id.tv);
         pb = findViewById(R.id.pb);
-        root.setOnClickListener(v -> getData());
+        root.setOnClickListener(v -> {
+            /*if (AppUtils.isFastClick()) {
+                toast("请勿重复点击");
+                return;
+            }*/
+            getData();
+        });
         root.setBackgroundColor(ColorUtils.getRandomBGColor());
 
         boolean isDarkMode = (this.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
@@ -65,12 +73,18 @@ public class MainAct extends BaseAct {
         }
     }
 
+    private boolean change = false;
     private void getData() {
         pb.setVisibility(View.VISIBLE);
-        HttpUtils.doGetAsyn("http://www.iamwawa.cn/home/dujitang/ajax", new HttpUtils.CallBack() {
+        String url = "http://www.iamwawa.cn/home/dujitang/ajax";
+        if (change){
+            url = "http://www.iamwawa.cn/home/lizhi/ajax";
+        }
+        HttpUtils.doGetAsyn(url, new HttpUtils.CallBack() {
             @Override
             public void ok(String result) {
                 try {
+                    change = !change;
                     loge(result);
                     pb.setVisibility(View.GONE);
                     root.setBackgroundColor(ColorUtils.getRandomBGColor());
