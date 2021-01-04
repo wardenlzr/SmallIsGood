@@ -191,12 +191,12 @@ public class HttpUtils {
             HttpURLConnection conn = (HttpURLConnection) realUrl
                     .openConnection();
             // 设置通用的请求属性
-            conn.setRequestProperty("accept", "*/*");
+            //Accept:application/json;charset=UTF-8
+            conn.setRequestProperty("accept", "application/json;charset=UTF-8");
             conn.setRequestProperty("connection", "Keep-Alive");
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded");
-            conn.setRequestProperty("charset", "utf-8");
             conn.setUseCaches(false);
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
@@ -231,6 +231,7 @@ public class HttpUtils {
 //        Accept-Encoding: gzip
 //        User-Agent: okhttp/3.10.0
 /***************************************智创工场业务才需要的**************************************************/
+            conn.setRequestProperty("charset", "utf-8");
             if (param != null && !param.trim().equals("")) {
                 // 获取URLConnection对象对应的输出流
                 out = new PrintWriter(conn.getOutputStream());

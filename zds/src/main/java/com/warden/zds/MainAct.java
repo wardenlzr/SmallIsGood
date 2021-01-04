@@ -22,7 +22,8 @@ public class MainAct extends BaseAct {
         setContentView(R.layout.act_main);
     }
 
-    private void getData() {
+    ////<1上午上班 2上午下班 3下午上班 4下午下班>
+    private void getData(int workType) {
 //        POST http://139.129.216.37:81/zxcity_restful/ws/rest
 
 //        114.377916,30.605729 湖北省武汉市洪山区罗家港路1197号靠近江南·新天地C区
@@ -38,7 +39,7 @@ public class MainAct extends BaseAct {
                 "    'remark5': 1, " +
                 "    'shopId': 1380, " +
                 "    'startWorkId': '39bdb1109d2f41ec84da64f502d8359f', " +
-                "    'state': 2, " +
+                "    'state': 0, " +// 0 上午, 1 下午,2上午迟到,3 下午早退
                 "    'userCode': '19971160515', " +
                 "    'userId': '15916', " +
                 "    'userName': '19971160515', " +
@@ -47,12 +48,12 @@ public class MainAct extends BaseAct {
                 "    'workLongitude': 114.377916, " +
                 "    'workRemark': '', " +
                 "    'workTimeId': 'bed85b703c2c11eb903700163e04c089', " +
-                "    'workType': 4, " +
+                "    'workType': " +workType+", " +
                 "    'workWay': 1, " +
                 "    'workWifimac': '28:d1:27:83:87:07', " +
                 "    'zUserCode': 'z1c19971160515'" +
                 "}";
-        JSONObject jsonObject = new JSONObject();
+        /*JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("cmd", "userWork/checkTimeCardNE");
             JSONObject jsonObject1 = new JSONObject();
@@ -74,22 +75,28 @@ public class MainAct extends BaseAct {
             jsonObject1.put("workLongitude", 114.377916);
             jsonObject1.put("workRemark", "");
             jsonObject1.put("workTimeId", "bed85b703c2c11eb903700163e04c089");
-            jsonObject1.put("workType", 4);
+            jsonObject1.put("workType", workType);//<1上午上班 2上午下班 3下午上班 4下午下班>
             jsonObject1.put("workWay", 1);
             jsonObject1.put("workWifimac", "28:d1:27:83:87:07");
             jsonObject1.put("zUserCode", "z1c19971160515");
             jsonObject.put("data", jsonObject1.toString());
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
         HttpUtils.doPostAsyn("http://139.129.216.37:81/zxcity_restful/ws/rest", params, new HttpUtils.CallBack() {
             @Override
             public void ok(String result) {
                 try {
                     loge(result);
-                    toast(result);
                     JSONObject jsonObject = new JSONObject(result);
-                    String status = jsonObject.getString("status");
+                    String code = jsonObject.getString("code");
+                    String msg = jsonObject.getString("msg");
+                    if (workType == 1) {
+                        toast("上班"+msg);
+                    }
+                    if (workType == 4) {
+                        toast("下班"+msg);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -104,7 +111,8 @@ public class MainAct extends BaseAct {
     }
 
     public void onWork(View view) {
-        try {
+        getData(1);
+        /*try {
             String url = "https://www.wanandroid.com/user/login";
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username", "warden");
@@ -124,10 +132,10 @@ public class MainAct extends BaseAct {
             });
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public void offWork(View view) {
-        getData();
+        getData(4);
     }
 }
