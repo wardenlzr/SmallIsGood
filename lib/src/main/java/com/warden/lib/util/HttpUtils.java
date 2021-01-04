@@ -11,6 +11,18 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Created by yubin 2020/11/23 0023  10:08
@@ -59,7 +71,7 @@ public class HttpUtils {
      * @throws Exception
      */
     public static void doPostAsyn(final String urlStr, final String params,
-                                  final CallBack callBack) throws Exception {
+                                  final CallBack callBack) {
         new Thread() {
             public void run() {
                 try {
@@ -131,7 +143,35 @@ public class HttpUtils {
         return null;
 
     }
+    public static void setNoCertificates() {
+        try {
+            TrustManager[] trustAllCerts = new TrustManager[]{
+                    new X509TrustManager() {
+                        public X509Certificate[] getAcceptedIssuers() {
+                            return null;
+                        }
+                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                        }
+                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                        }
+                    }
+            };
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 
+            HostnameVerifier allHostsValid = new HostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };
+            HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * 向指定 URL 发送POST方法的请求
      *
@@ -141,6 +181,7 @@ public class HttpUtils {
      * @throws Exception
      */
     public static String doPost(String url, String param) {
+        setNoCertificates();
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
@@ -162,7 +203,34 @@ public class HttpUtils {
             conn.setDoInput(true);
             conn.setReadTimeout(TIMEOUT_IN_MILLIONS);
             conn.setConnectTimeout(TIMEOUT_IN_MILLIONS);
+/*************************************智创工场业务才需要的****************************************************/
+            conn.setRequestProperty("apikey", "test");
+            conn.setRequestProperty("version", "1");
+            conn.setRequestProperty("appPlatform", "Android");
+            conn.setRequestProperty("appType", "SmartMaster");
+            conn.setRequestProperty("userId", "83457");
+            conn.setRequestProperty("phone", "19971160515");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Host", "139.129.216.37:81");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Accept-Encoding", "gzip");
+            conn.setRequestProperty("User-Agent", "okhttp/3.10.0");
+            //            conn.setRequestProperty("Content-Length", "1101");
 
+//        apikey: cMd4Pc7sVDhiU9Pv
+//        version: 1
+//        appPlatform: Android
+//        appVersion: 1.7.71
+//        appType: SmartMaster
+//        userId: 83457
+//        phone: 19971160515
+//        Content-Type: application/x-www-form-urlencoded
+//        Content-Length: 1101
+//        Host: 139.129.216.37:81
+//        Connection: Keep-Alive
+//        Accept-Encoding: gzip
+//        User-Agent: okhttp/3.10.0
+/***************************************智创工场业务才需要的**************************************************/
             if (param != null && !param.trim().equals("")) {
                 // 获取URLConnection对象对应的输出流
                 out = new PrintWriter(conn.getOutputStream());

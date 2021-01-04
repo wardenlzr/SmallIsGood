@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="24dp"
+    tools:context=".MainAct">
+
+    <ProgressBar
+        android:id="@+id/pb"
+        style="@android:style/Widget.Material.ProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16sp"
+        android:text="江南新天地"
+        android:textColor="#333333"
+        android:textIsSelectable="true"
+        android:textSize="20sp"
+        tools:ignore="HardcodedText" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="16sp"
+            android:text="上班打卡"
+            android:onClick="onWork"
+            android:textColor="#333333"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+
+        <Button
+            android:id="@+id/bt2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="16sp"
+            android:text="下班打卡"
+            android:onClick="offWork"
+            android:textColor="#333333"
+            android:textSize="20sp"
+            tools:ignore="HardcodedText" />
+    </LinearLayout>
+
+
+    <!-- <TextView
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:gravity="center"
+         android:layout_below="@+id/tv"
+         android:textSize="13sp"
+         android:text="(单击复制全文,长按可自由复制)"
+         android:textColor="#999999"
+         tools:ignore="HardcodedText" />-->
+
+</LinearLayout>
