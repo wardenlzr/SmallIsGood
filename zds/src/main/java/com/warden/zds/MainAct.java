@@ -43,7 +43,7 @@ public class MainAct extends BaseAct {
             jsonObject1.put("userCode", "19971160515");
             jsonObject1.put("userId", "15916");
             jsonObject1.put("userName", "19971160515");
-            jsonObject1.put("workAddress", "湖北省武汉市洪山区罗家港路1197号靠近江南·新天地C区\n");
+            jsonObject1.put("workAddress", "湖北省武汉市洪山区罗家港路1197号靠近江南·新天地C区");
             jsonObject1.put("workLatitude", 30.605729);
             jsonObject1.put("workLongitude", 114.377916);
             jsonObject1.put("workRemark", "");
@@ -58,7 +58,7 @@ public class MainAct extends BaseAct {
         }
         String params = "cmd\tuserWork/checkTimeCardNE\n" +
                 "data\t{\"deployId\":\"becbe9f63c2c11eb903700163e04c089\",\"facilityId\":\"b4c792e1022803fbunknown\",\"facilityName\":\"Redmi M2004J7AC\",\"gradeId\":\"bed691e53c2c11eb903700163e04c089\",\"isUpdate\":0,\"remark1\":\"Warden_redmi_WIFI6_5G\",\"remark5\":1,\"shopId\":1380,\"startWorkId\":\"39bdb1109d2f41ec84da64f502d8359f\",\"state\":2,\"userCode\":\"19971160515\",\"userId\":\"15916\",\"userName\":\"19971160515\",\"workAddress\":\"湖胡北省武汉市洪山区罗家港路1197号靠近江南·新天地C区\",\"workLatitude\":30.605729,\"workLongitude\":114.377916,\"workRemark\":\"\",\"workTimeId\":\"bed85b703c2c11eb903700163e04c089\",\"workType\":4,\"workWay\":1,\"workWifimac\":\"28:d1:27:83:87:07\",\"zUserCode\":\"z1c19971160515\"}\n";
-        HttpUtils.doPostAsyn("http://139.129.216.37:81/zxcity_restful/ws/rest", params, new HttpUtils.CallBack() {
+        HttpUtils.doPostAsyn("http://139.129.216.37:81/zxcity_restful/ws/rest", jsonObject.toString(), new HttpUtils.CallBack() {
             @Override
             public void ok(String result) {
                 try {
