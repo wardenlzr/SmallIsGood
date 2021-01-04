@@ -26,6 +26,32 @@ public class MainAct extends BaseAct {
 //        POST http://139.129.216.37:81/zxcity_restful/ws/rest
 
 //        114.377916,30.605729 湖北省武汉市洪山区罗家港路1197号靠近江南·新天地C区
+//        请求参数，请求参数应该是 name1=value1&name2=value2 的形式
+        String params = "";
+        params = "cmd=userWork/checkTimeCardNE&data={" +
+                "    'deployId': 'becbe9f63c2c11eb903700163e04c089', " +
+                "    'facilityId': 'b4c792e1022803fbunknown', " +
+                "    'facilityName': 'Redmi M2004J7AC', " +
+                "    'gradeId': 'bed691e53c2c11eb903700163e04c089', " +
+                "    'isUpdate': 0, " +
+                "    'remark1': 'Warden_redmi_WIFI6_5G', " +
+                "    'remark5': 1, " +
+                "    'shopId': 1380, " +
+                "    'startWorkId': '39bdb1109d2f41ec84da64f502d8359f', " +
+                "    'state': 2, " +
+                "    'userCode': '19971160515', " +
+                "    'userId': '15916', " +
+                "    'userName': '19971160515', " +
+                "    'workAddress': '湖北省武汉市洪山区罗家港路1197号靠近江南·新天地C区', " +
+                "    'workLatitude': 30.605729, " +
+                "    'workLongitude': 114.377916, " +
+                "    'workRemark': '', " +
+                "    'workTimeId': 'bed85b703c2c11eb903700163e04c089', " +
+                "    'workType': 4, " +
+                "    'workWay': 1, " +
+                "    'workWifimac': '28:d1:27:83:87:07', " +
+                "    'zUserCode': 'z1c19971160515'" +
+                "}";
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("cmd", "userWork/checkTimeCardNE");
@@ -56,12 +82,11 @@ public class MainAct extends BaseAct {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        String params = "cmd\tuserWork/checkTimeCardNE\n" +
-                "data\t{\"deployId\":\"becbe9f63c2c11eb903700163e04c089\",\"facilityId\":\"b4c792e1022803fbunknown\",\"facilityName\":\"Redmi M2004J7AC\",\"gradeId\":\"bed691e53c2c11eb903700163e04c089\",\"isUpdate\":0,\"remark1\":\"Warden_redmi_WIFI6_5G\",\"remark5\":1,\"shopId\":1380,\"startWorkId\":\"39bdb1109d2f41ec84da64f502d8359f\",\"state\":2,\"userCode\":\"19971160515\",\"userId\":\"15916\",\"userName\":\"19971160515\",\"workAddress\":\"湖胡北省武汉市洪山区罗家港路1197号靠近江南·新天地C区\",\"workLatitude\":30.605729,\"workLongitude\":114.377916,\"workRemark\":\"\",\"workTimeId\":\"bed85b703c2c11eb903700163e04c089\",\"workType\":4,\"workWay\":1,\"workWifimac\":\"28:d1:27:83:87:07\",\"zUserCode\":\"z1c19971160515\"}\n";
-        HttpUtils.doPostAsyn("http://139.129.216.37:81/zxcity_restful/ws/rest", jsonObject.toString(), new HttpUtils.CallBack() {
+        HttpUtils.doPostAsyn("http://139.129.216.37:81/zxcity_restful/ws/rest", params, new HttpUtils.CallBack() {
             @Override
             public void ok(String result) {
                 try {
+                    loge(result);
                     toast(result);
                     JSONObject jsonObject = new JSONObject(result);
                     String status = jsonObject.getString("status");
@@ -72,6 +97,7 @@ public class MainAct extends BaseAct {
 
             @Override
             public void fail(String exception) {
+                loge(exception);
                 toast(exception);
             }
         });
@@ -83,14 +109,16 @@ public class MainAct extends BaseAct {
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("username", "warden");
             jsonObject.put("password", "yb911207");
-            HttpUtils.doPostAsyn(url, jsonObject.toString(), new HttpUtils.CallBack() {
+            HttpUtils.doPostAsyn(url, "username=warden&password=yb911207", new HttpUtils.CallBack() {
                 @Override
                 public void ok(String result) {
+                    loge(result);
                     toast(result);
                 }
 
                 @Override
                 public void fail(String exception) {
+                    loge(exception);
                     toast(exception);
                 }
             });
