@@ -3,6 +3,8 @@ package com.warden.zds;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import com.warden.lib.base.BaseAct;
 import com.warden.lib.util.HttpUtils;
@@ -20,39 +22,51 @@ public class MainAct extends BaseAct {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.act_main);
+        CheckBox cb = findViewById(R.id.cb);
+        cb.setOnCheckedChangeListener((compoundButton, b) -> {
+            if (b) {
+                Config.isTest = true;
+            }else {
+                Config.isTest = false;
+            }
+            Config.change();
+            loge(Config.BASEURL);
+        });
     }
 
-    ////<1上午上班 2上午下班 3下午上班 4下午下班>
-    private void getData(int workType) {
+    //workType <1上午上班 2上午下班 3下午上班 4下午下班>
+    // state 1 上午, 2 下午,3上午迟到,4 下午早退
+    private void getData(int state, int workType) {
 //        POST http://139.129.216.37:81/zxcity_restful/ws/rest
 
 //        114.377916,30.605729 湖北省武汉市洪山区罗家港路1197号靠近江南·新天地C区
 //        请求参数，请求参数应该是 name1=value1&name2=value2 的形式
         String params = "";
         params = "cmd=userWork/checkTimeCardNE&data={" +
-                "    'deployId': 'becbe9f63c2c11eb903700163e04c089', " +
+                "    'deployId': '"+ Config.DEPLOYID+"', " +
                 "    'facilityId': 'b4c792e1022803fbunknown', " +
                 "    'facilityName': 'Redmi M2004J7AC', " +
-                "    'gradeId': 'bed691e53c2c11eb903700163e04c089', " +
+                "    'gradeId': '"+ Config.DEPLOYID+"', " +
                 "    'isUpdate': 0, " +
                 "    'remark1': 'Warden_redmi_WIFI6_5G', " +
                 "    'remark5': 1, " +
                 "    'shopId': 1380, " +
                 "    'startWorkId': '39bdb1109d2f41ec84da64f502d8359f', " +
-                "    'state': 0, " +// 0 上午, 1 下午,2上午迟到,3 下午早退
+                "    'state': "+ state +", " +//1 上午, 2 下午,3上午迟到,4 下午早退
                 "    'userCode': '19971160515', " +
-                "    'userId': '15916', " +
-                "    'userName': '19971160515', " +
+                "    'userId': "+ Config.USERID +", " +
+                "    'userName': "+ Config.PHONE+", " +
                 "    'workAddress': '湖北省武汉市洪山区罗家港路1197号靠近江南·新天地C区', " +
                 "    'workLatitude': 30.605729, " +
                 "    'workLongitude': 114.377916, " +
-                "    'workRemark': '', " +
-                "    'workTimeId': 'bed85b703c2c11eb903700163e04c089', " +
+                "    'workRemark': '练摊', " +
+                "    'workTimeId': '"+ Config.DEPLOYID+"', " +
                 "    'workType': " +workType+", " +
                 "    'workWay': 1, " +
                 "    'workWifimac': '28:d1:27:83:87:07', " +
                 "    'zUserCode': 'z1c19971160515'" +
                 "}";
+
         /*JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("cmd", "userWork/checkTimeCardNE");
@@ -83,10 +97,11 @@ public class MainAct extends BaseAct {
         } catch (JSONException e) {
             e.printStackTrace();
         }*/
-        HttpUtils.doPostAsyn("http://139.129.216.37:81/zxcity_restful/ws/rest", params, new HttpUtils.CallBack() {
+        HttpUtils.doPostAsyn(Config.BASEURL, params, new HttpUtils.CallBack() {
             @Override
             public void ok(String result) {
                 try {
+                    toast("操作成功");
                     loge(result);
                     JSONObject jsonObject = new JSONObject(result);
                     String code = jsonObject.getString("code");
@@ -111,7 +126,7 @@ public class MainAct extends BaseAct {
     }
 
     public void onWork(View view) {
-        getData(1);
+        getData(1,1);
         /*try {
             String url = "https://www.wanandroid.com/user/login";
             JSONObject jsonObject = new JSONObject();
@@ -136,6 +151,6 @@ public class MainAct extends BaseAct {
     }
 
     public void offWork(View view) {
-        getData(4);
+        getData(2,4);
     }
 }

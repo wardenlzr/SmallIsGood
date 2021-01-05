@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -181,7 +182,7 @@ public class HttpUtils {
      * @throws Exception
      */
     public static String doPost(String url, String param) {
-        setNoCertificates();
+//        setNoCertificates();
         PrintWriter out = null;
         BufferedReader in = null;
         String result = "";
@@ -195,8 +196,7 @@ public class HttpUtils {
             conn.setRequestProperty("accept", "application/json;charset=UTF-8");
             conn.setRequestProperty("connection", "Keep-Alive");
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type",
-                    "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             conn.setUseCaches(false);
             // 发送POST请求必须设置如下两行
             conn.setDoOutput(true);
@@ -208,13 +208,10 @@ public class HttpUtils {
             conn.setRequestProperty("version", "1");
             conn.setRequestProperty("appPlatform", "Android");
             conn.setRequestProperty("appType", "SmartMaster");
-            conn.setRequestProperty("userId", "83457");
-            conn.setRequestProperty("phone", "19971160515");
-            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            conn.setRequestProperty("Host", "139.129.216.37:81");
-            conn.setRequestProperty("Connection", "Keep-Alive");
             conn.setRequestProperty("Accept-Encoding", "gzip");
             conn.setRequestProperty("User-Agent", "okhttp/3.10.0");
+//            conn.setRequestProperty("phone", "19971160515");
+//            conn.setRequestProperty("userId", "83457");
             //            conn.setRequestProperty("Content-Length", "1101");
 
 //        apikey: cMd4Pc7sVDhiU9Pv
@@ -236,13 +233,14 @@ public class HttpUtils {
                 // 获取URLConnection对象对应的输出流
                 out = new PrintWriter(conn.getOutputStream());
                 // 发送请求参数
+                System.out.print(param);
                 out.print(param);
                 // flush输出流的缓冲
                 out.flush();
             }
             // 定义BufferedReader输入流来读取URL的响应
             in = new BufferedReader(
-                    new InputStreamReader(conn.getInputStream()));
+                    new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8));
             String line;
             while ((line = in.readLine()) != null) {
                 result += line;

@@ -16,6 +16,16 @@
         android:layout_centerInParent="true"
         android:visibility="gone" />
 
+    <CheckBox
+        android:id="@+id/cb"
+        android:checked="true"
+        android:text="是否为测试环境"
+        android:layout_margin="16dp"
+        style="@android:style/Widget.Material"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:ignore="HardcodedText" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,24 +43,26 @@
 
         <Button
             android:id="@+id/bt1"
+            style="@android:style/Widget.Material.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="onWork"
             android:padding="16sp"
             android:text="上班打卡"
-            android:onClick="onWork"
             android:textColor="#333333"
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/bt2"
+            style="@android:style/Widget.Material.Button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:onClick="offWork"
             android:padding="16sp"
             android:text="下班打卡"
-            android:onClick="offWork"
             android:textColor="#333333"
             android:textSize="20sp"
             tools:ignore="HardcodedText" />
