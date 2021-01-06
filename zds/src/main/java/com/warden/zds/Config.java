@@ -27,7 +27,7 @@ public class Config {
         }else {
             ////正式的参数
             BASEURL = "http://app.izxcs.com:81/zxcity_restful/ws/rest";
-            USERID = "83457";
+            USERID = "15170";
             PHONE = "19971160515";
             DEPLOYID = "2a3428ca411e11eb8b5b0c42a135e9b8";//正式的班次ID
         }

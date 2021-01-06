@@ -4,12 +4,10 @@ package com.warden.zds;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import com.warden.lib.base.BaseAct;
 import com.warden.lib.util.HttpUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -26,7 +24,7 @@ public class MainAct extends BaseAct {
         cb.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
                 Config.isTest = true;
-            }else {
+            } else {
                 Config.isTest = false;
             }
             Config.change();
@@ -34,8 +32,8 @@ public class MainAct extends BaseAct {
         });
     }
 
-    //workType <1上午上班 2上午下班 3下午上班 4下午下班>
     // state 1 上午, 2 下午,3上午迟到,4 下午早退
+    //workType <1上午上班 2上午下班 3下午上班 4下午下班>
     private void getData(int state, int workType) {
 //        POST http://139.129.216.37:81/zxcity_restful/ws/rest
 
@@ -43,25 +41,25 @@ public class MainAct extends BaseAct {
 //        请求参数，请求参数应该是 name1=value1&name2=value2 的形式
         String params = "";
         params = "cmd=userWork/checkTimeCardNE&data={" +
-                "    'deployId': '"+ Config.DEPLOYID+"', " +
+                "    'deployId': '" + Config.DEPLOYID + "', " +
                 "    'facilityId': 'b4c792e1022803fbunknown', " +
                 "    'facilityName': 'Redmi M2004J7AC', " +
-                "    'gradeId': '"+ Config.DEPLOYID+"', " +
+                "    'gradeId': '" + Config.DEPLOYID + "', " +
                 "    'isUpdate': 0, " +
-                "    'remark1': 'Warden_redmi_WIFI6_5G', " +
+                "    'remark1': 'WIFI6_5G', " +
                 "    'remark5': 1, " +
                 "    'shopId': 1380, " +
                 "    'startWorkId': '39bdb1109d2f41ec84da64f502d8359f', " +
-                "    'state': "+ state +", " +//1 上午, 2 下午,3上午迟到,4 下午早退
-                "    'userCode': '19971160515', " +
-                "    'userId': "+ Config.USERID +", " +
-                "    'userName': "+ Config.PHONE+", " +
-                "    'workAddress': '湖北省武汉市洪山区罗家港路1197号靠近江南·新天地C区', " +
+                "    'state': " + state + ", " +//1 上午, 2 下午,3上午迟到,4 下午早退
+                "    'userCode': " + Config.PHONE + ", " +
+                "    'userId': " + Config.USERID + ", " +
+                "    'userName': " + Config.PHONE + ", " +
+                "    'workAddress': '湖北省-武汉市洪山区罗家港路1197号靠近江南·新天地C区', " +
                 "    'workLatitude': 30.605729, " +
                 "    'workLongitude': 114.377916, " +
                 "    'workRemark': '练摊', " +
-                "    'workTimeId': '"+ Config.DEPLOYID+"', " +
-                "    'workType': " +workType+", " +
+                "    'workTimeId': '" + Config.DEPLOYID + "', " +
+                "    'workType': " + workType + ", " +
                 "    'workWay': 1, " +
                 "    'workWifimac': '28:d1:27:83:87:07', " +
                 "    'zUserCode': 'z1c19971160515'" +
@@ -107,10 +105,10 @@ public class MainAct extends BaseAct {
                     String code = jsonObject.getString("code");
                     String msg = jsonObject.getString("msg");
                     if (workType == 1) {
-                        toast("上班"+msg);
+                        toast("上班" + msg);
                     }
                     if (workType == 4) {
-                        toast("下班"+msg);
+                        toast("下班" + msg);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -126,7 +124,7 @@ public class MainAct extends BaseAct {
     }
 
     public void onWork(View view) {
-        getData(1,1);
+        getData(1, 1);
         /*try {
             String url = "https://www.wanandroid.com/user/login";
             JSONObject jsonObject = new JSONObject();
@@ -151,6 +149,6 @@ public class MainAct extends BaseAct {
     }
 
     public void offWork(View view) {
-        getData(2,4);
+        getData(2, 4);
     }
 }
