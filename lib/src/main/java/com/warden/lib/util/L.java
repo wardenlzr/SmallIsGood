@@ -39,11 +39,11 @@ public class L {
         //方法名
         String methodNameShort = methodName.substring(0, 1).toUpperCase() + methodName.substring(1);
 
-        System.out.println("className=" + className);
-        System.out.println("lineNumber=" + lineNumber);
-        System.out.println("methodNameShort=" + methodNameShort);
+//        System.out.println("className=" + className);
+//        System.out.println("lineNumber=" + lineNumber);
+//        System.out.println("methodNameShort=" + methodNameShort);
         String headString = "[ (" + className + ":" + lineNumber + ")#" + methodNameShort + " ]";
-         headString += "[ (" + targetElement1.getClassName() + ":" + targetElement1.getLineNumber() + ")#" + targetElement1.getMethodName() + " ] ";
+         headString += "called:[ (" + targetElement1.getClassName() + ":" + targetElement1.getLineNumber() + ")#" + targetElement1.getMethodName() + " ] ";
         Log.e(headString, s);
     }
 
