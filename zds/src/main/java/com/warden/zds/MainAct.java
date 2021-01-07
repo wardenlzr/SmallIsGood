@@ -30,6 +30,7 @@ public class MainAct extends BaseAct {
             Config.change();
             loge(Config.BASEURL);
         });
+        loge(Config.BASEURL);
     }
 
     // state 1 上午, 2 下午,3上午迟到,4 下午早退

@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.warden.lib.util.L;
+
 /**
  * Created by yubin 2020/10/21 0021  11:23
  */
@@ -19,7 +21,7 @@ public class BaseAct extends Activity {
     }
 
     public void loge(String s) {
-        Log.e("Warden", "log() called with: s = [" + s + "]");
+        L.e(s);
     }
 
     public void toast(String s) {
