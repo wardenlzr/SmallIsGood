@@ -8,10 +8,12 @@ import android.util.Log;
 public class L {
 
     public static void e() {
-        e("【空参打印】");
+        e("【空参打印】",4);
     }
     public static void e(String s) {
-        int STACK_TRACE_INDEX = 2;
+        e(s, 4);
+    }
+    public static void e(String s, int stackIndex) {
         String SUFFIX = ".java";
 
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
@@ -21,8 +23,9 @@ public class L {
 //            String s1 = element.getClassName() + "=====" + element.getLineNumber() +  element.getMethodName();
 //            System.out.print(s1);
 //        }
-        StackTraceElement targetElement = stackTrace[5];
-        StackTraceElement targetElement1 = stackTrace[3];
+        Log.e("length", "stackIndex=" + stackIndex);
+        StackTraceElement targetElement = stackTrace[stackIndex];
+        StackTraceElement targetElement1 = stackTrace[stackIndex-1];
         //类名
         String className = targetElement.getClassName();
         String[] classNameInfo = className.split("\\.");
