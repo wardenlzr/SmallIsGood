@@ -1,7 +1,7 @@
 package com.warden.test;
 
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,32 +9,35 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.warden.lib.base.BaseAct;
+
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class MainActivity extends Activity {
+/**
+ * 通过相机获取原图和缩略图
+ */
+public class CameraAct extends BaseAct {
 
     private ImageView iv;
 
     private String filePath;
     private FileInputStream fis;
 
+    public static void start(Context context) {
+        context.startActivity(new Intent(context, CameraAct.class));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.act_camera);
         iv = (ImageView) findViewById(R.id.iv);
         filePath = Environment.getExternalStorageState() + "/test.png";
-    }
-
-    public void loge(String s) {
-        Log.e("Warden", "log(): [" + s + "]");
     }
 
     public void camera1(View view) {
@@ -56,10 +59,12 @@ public class MainActivity extends Activity {
             if (requestCode == 999) {
                 Bundle bundle = data.getExtras();
                 Bitmap bitmap = (Bitmap) bundle.get("data");
+                //获取缩略图
                 iv.setImageBitmap(bitmap);
-            }else if(requestCode == 998){
+            } else if (requestCode == 998) {
                 FileInputStream fis = null;
                 try {
+                    //获取原图
                     fis = new FileInputStream(filePath);
                     Bitmap bitmap = BitmapFactory.decodeStream(fis);
                     iv.setImageBitmap(bitmap);

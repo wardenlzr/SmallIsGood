@@ -5,6 +5,6 @@ include ':lib'
 //include ':apk1'
 //include ':pkg'
 //include ':lockscreen'
-include ':djt'
-include ':zds'
+//include ':djt'
+//include ':zds'
 rootProject.name = "SmallIsGood"

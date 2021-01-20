@@ -6,6 +6,10 @@ import android.util.Log;
  * Created by yubin 2021/1/7 0007  16:26
  */
 public class L {
+
+    public static void e() {
+        e("【空参打印】");
+    }
     public static void e(String s) {
         int STACK_TRACE_INDEX = 2;
         String SUFFIX = ".java";
@@ -17,8 +21,8 @@ public class L {
 //            String s1 = element.getClassName() + "=====" + element.getLineNumber() +  element.getMethodName();
 //            System.out.print(s1);
 //        }
+        StackTraceElement targetElement = stackTrace[5];
         StackTraceElement targetElement1 = stackTrace[3];
-        StackTraceElement targetElement = stackTrace[4];
         //类名
         String className = targetElement.getClassName();
         String[] classNameInfo = className.split("\\.");
@@ -43,7 +47,7 @@ public class L {
 //        System.out.println("lineNumber=" + lineNumber);
 //        System.out.println("methodNameShort=" + methodNameShort);
         String headString = "[ (" + className + ":" + lineNumber + ")#" + methodNameShort + " ]";
-         headString += "called:[ (" + targetElement1.getClassName() + ":" + targetElement1.getLineNumber() + ")#" + targetElement1.getMethodName() + " ] ";
+         headString += "(" + targetElement1.getClassName() + ":" + targetElement1.getLineNumber() + ")#";
         Log.e(headString, s);
     }
 

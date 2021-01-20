@@ -20,6 +20,9 @@ public class BaseAct extends Activity {
         activity = this;
     }
 
+    public void loge() {
+        L.e();
+    }
     public void loge(String s) {
         L.e(s);
     }
