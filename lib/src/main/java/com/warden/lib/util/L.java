@@ -51,7 +51,7 @@ public class L {
 //        System.out.println("methodNameShort=" + methodNameShort);
         String headString = "[ (" + className + ":" + lineNumber + ")#" + methodNameShort + " ]";
          headString += "(" + targetElement1.getClassName() + ":" + targetElement1.getLineNumber() + ")#";
-        Log.e(headString, s);
+        Log.e(headString + "", s + "");
     }
 
 }

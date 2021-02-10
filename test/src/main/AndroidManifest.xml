@@ -15,13 +15,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainAct">
+
+        </activity>
+        <activity android:name=".TestLunchAct" android:launchMode="singleInstance"/>
+        <activity android:name=".KotlinTestAct" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TestLunchAct" android:launchMode="singleInstance"/>
 
 
     </application>

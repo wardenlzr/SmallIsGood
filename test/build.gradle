@@ -1,10 +1,11 @@
 plugins {
     id 'com.android.application'
 }
+apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "30.0.2"
+    compileSdkVersion 28
+    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "com.warden.test"
@@ -25,4 +26,9 @@ android {
 
 dependencies {
     implementation project(path:":lib")
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+}
+repositories {
+    mavenCentral()
 }

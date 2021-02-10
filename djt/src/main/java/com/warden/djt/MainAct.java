@@ -97,7 +97,7 @@ public class MainAct extends BaseAct {
                         data = jsonObject.getString("info");
                     }
                     tv.setText(data);
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     tv.setText("没有毒鸡汤, 好好努力就行了");
                 }
