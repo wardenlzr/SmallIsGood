@@ -1,7 +1,7 @@
 include ':test'
 include ':lib'
 
-//include ':civilcode'
+include ':civilcode'
 //include ':apk1'
 //include ':pkg'
 //include ':lockscreen'
