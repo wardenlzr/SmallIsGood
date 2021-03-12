@@ -1,6 +1,7 @@
 package com.warden.civilcode;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.widget.ProgressBar;
 
 public class MainAct extends Activity {
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +31,9 @@ public class MainAct extends Activity {
         webSettings.setAllowContentAccess(true);
         webSettings.setDomStorageEnabled(true);
         webView.getSettings().setAllowFileAccessFromFileURLs(true);
-        webView.loadUrl("http://app.uhetong.com:9988/civil/");
+//        String url = "file:///android_asset/index.html";
+        String url = "http://app.uhetong.com:9988/civil/";
+        webView.loadUrl(url);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {

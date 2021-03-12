@@ -10,11 +10,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.warden.lib.base.BaseAct;
-import com.warden.lib.util.AppUtils;
 import com.warden.lib.util.ColorUtils;
 import com.warden.lib.util.HttpUtils;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -54,7 +52,32 @@ public class MainAct extends BaseAct {
             ClipboardUtils.copy(tv.getText().toString());
             toast("内容已复制");
         });*/
-        getData();
+        checkApp();
+    }
+
+    private void checkApp() {
+        String url = "http://mockhttp.cn/mock/aaa";
+//        String url = "http://mockhttp.cn/mock/aaa123";
+        HttpUtils.doGetAsyn(url, new HttpUtils.CallBack() {
+            @Override
+            public void ok(String result) {
+                try {
+                    loge(result);
+                    JSONObject jsonObject = new JSONObject(result);
+                    boolean isDemo = jsonObject.getBoolean("isDemo");
+                    if (isDemo) {
+                        getData();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void fail(String exception) {
+
+            }
+        });
     }
 
     //manifest中配置android:configChanges="uiMode"才会走此方法
