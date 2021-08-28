@@ -1,4 +1,4 @@
-package com.warden.test;
+package com.warden.test.mycase;
 
 
 import android.content.Context;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.warden.lib.base.BaseAct;
+import com.warden.test.R;
 
 import java.io.File;
 import java.io.FileInputStream;

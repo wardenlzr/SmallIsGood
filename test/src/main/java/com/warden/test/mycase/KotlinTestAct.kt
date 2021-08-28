@@ -1,4 +1,4 @@
-package com.warden.test
+package com.warden.test.mycase
 
 import android.content.Context
 import android.content.Intent
@@ -6,7 +6,11 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import com.warden.lib.base.BaseAct
+import com.warden.test.R
 
+/**
+ * 成员变量与静态成员变量
+ */
 class KotlinTestAct : BaseAct() {
 
     var str1 = "成员变量"

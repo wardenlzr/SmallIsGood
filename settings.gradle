@@ -1,10 +1,10 @@
 include ':test'
 include ':lib'
 
-include ':civilcode'
+//include ':civilcode'
 //include ':apk1'
 //include ':pkg'
 //include ':lockscreen'
-include ':djt'
-include ':zds'
+//include ':djt'
+//include ':zds'
 rootProject.name = "SmallIsGood"
