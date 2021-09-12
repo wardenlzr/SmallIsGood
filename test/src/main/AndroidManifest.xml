@@ -7,14 +7,16 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true">
-        <activity android:name=".MainAct">
+        <activity android:name=".MainAct"
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".mycase.CameraAct">
+        <activity android:name=".mycase.CameraAct"
+            android:exported="false">
             <intent-filter>
                 <!--        可供其他程序使用        -->
                 <action android:name="android.media.action.IMAGE_CAPTURE" />
