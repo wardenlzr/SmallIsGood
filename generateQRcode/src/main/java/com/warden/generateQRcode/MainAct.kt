@@ -1,24 +1,29 @@
 package com.warden.generateQRcode
 
 import android.Manifest
+import android.content.ContentValues
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.text.TextUtils
+import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.animation.GlideAnimation
-import com.bumptech.glide.request.target.SimpleTarget
 import com.warden.lib.base.BaseAct
 import com.warden.lib.util.*
 import com.warden.lib.util.HttpUtils.CallBack
 import kotlinx.android.synthetic.main.act_main.*
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.*
@@ -89,6 +94,13 @@ class MainAct : BaseAct() {
             )
             return
         }
+        val image = getBitmapByView(iv)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            saveImageToGallery(this, image)
+        } else {
+            saveImage(image)
+        }
+        /*
         Glide.with(activity)
             .load(qrCodeUrl)
             .asBitmap()
@@ -100,6 +112,7 @@ class MainAct : BaseAct() {
                     saveImage(resource)
                 }
             })
+        * */
         /*if (!directory.exists()) {
             directory.mkdir()
         }
@@ -131,6 +144,56 @@ class MainAct : BaseAct() {
         }*/
     }
 
+    private fun getBitmapByView(view: View): Bitmap {
+        view.isDrawingCacheEnabled = true
+        view.buildDrawingCache()
+        return view.drawingCache
+    }
+
+    /**
+     * android 11及以上保存图片到相册
+     * @param context
+     * @param image
+     */
+    @RequiresApi(Build.VERSION_CODES.Q)
+    private fun saveImageToGallery(context: Context, image: Bitmap) {
+        val mImageTime = System.currentTimeMillis()
+        val mImageFileName = et.text.toString() + "_" + mImageTime + ".png"
+        val values = ContentValues();
+        values.put(
+            MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES
+                    + File.separator + "generateQRcode"
+        ); //Environment.DIRECTORY_SCREENSHOTS:截图,图库中显示的文件夹名。
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, mImageFileName);
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+        values.put(MediaStore.MediaColumns.DATE_ADDED, mImageTime / 1000);
+        values.put(MediaStore.MediaColumns.DATE_MODIFIED, mImageTime / 1000);
+        values.put(
+            MediaStore.MediaColumns.DATE_EXPIRES,
+            (mImageTime) / 1000
+        );
+        values.put(MediaStore.MediaColumns.IS_PENDING, 1);
+
+        val resolver = context.contentResolver;
+        val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        // First, write the actual data for our screenshot
+        try {
+            val out = resolver.openOutputStream(uri!!)
+            if (!image.compress(Bitmap.CompressFormat.PNG, 100, out)) {
+                throw IOException("Failed to compress");
+            }
+            // Everything went well above, publish it!
+            values.clear();
+            values.put(MediaStore.MediaColumns.IS_PENDING, 0);
+            values.putNull(MediaStore.MediaColumns.DATE_EXPIRES);
+            resolver.update(uri, values, null, null);
+            toast("保存成功")
+        } catch (e: IOException) {
+            e.printStackTrace()
+            toast("保存失败")
+        }
+    }
+
     private fun saveImage(image: Bitmap) {
         val saveImagePath: String
         val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.CHINA);
@@ -138,9 +201,10 @@ class MainAct : BaseAct() {
         val time = dateFormat.format(Date(System.currentTimeMillis()));
         val imageFileName = et.text.toString() + "_" + time + ".png"
         val storageDir = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                .toString() + "generateQRcode"
+            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).toString()
+                    + "/generateQRcode"
         )
+        L.e("storageDir:$storageDir")
         var success = true
         if (!storageDir.exists()) {
             success = storageDir.mkdirs()
@@ -149,16 +213,17 @@ class MainAct : BaseAct() {
             val imageFile = File(storageDir, imageFileName)
             saveImagePath = imageFile.absolutePath
             try {
-                val fout: OutputStream = FileOutputStream(imageFile)
-                image.compress(Bitmap.CompressFormat.JPEG, 70, fout)
-                fout.close()
+                val fos: OutputStream = FileOutputStream(imageFile)
+                image.compress(Bitmap.CompressFormat.JPEG, 70, fos)
+                fos.close()
+                // Add the image to the system gallery
+                galleryAddPic(saveImagePath)
+                toast("保存成功")
             } catch (e: Exception) {
                 e.printStackTrace()
+                toast("保存失败" + e.message)
             }
-            // Add the image to the system gallery
-            galleryAddPic(saveImagePath)
-            toast("保存成功")
-        }
+        } else toast("保存失败")
     }
 
     private fun galleryAddPic(imagePath: String?) {

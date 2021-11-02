@@ -21,6 +21,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:hint="输入要生成的内容"
+            android:text="面对疾风吧"
             android:padding="16dp"
             android:textSize="18sp"
             tools:ignore="HardcodedText" />
