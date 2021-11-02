@@ -3,12 +3,11 @@ plugins {
 }
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 31
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
     }
@@ -26,5 +25,5 @@ android {
 }
 
 dependencies {
-
+    implementation 'com.google.code.gson:gson:2.8.6'
 }

@@ -15,7 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
@@ -58,8 +57,6 @@ public class HttpUtils {
                 }
 
             }
-
-            ;
         }.start();
     }
 
@@ -98,7 +95,7 @@ public class HttpUtils {
      * @throws Exception
      */
     public static String doGet(String urlStr) {
-        URL url = null;
+        URL url;
         HttpURLConnection conn = null;
         InputStream is = null;
         ByteArrayOutputStream baos = null;
@@ -122,7 +119,7 @@ public class HttpUtils {
                 baos.flush();
                 return baos.toString();
             } else {
-                throw new RuntimeException(" responseCode is not 200 ... ");
+                L.e("conn.getResponseCode() = " + conn.getResponseCode());
             }
 
         } catch (Exception e) {
@@ -132,11 +129,13 @@ public class HttpUtils {
                 if (is != null)
                     is.close();
             } catch (IOException e) {
+                L.e(e.getMessage());
             }
             try {
                 if (baos != null)
                     baos.close();
             } catch (IOException e) {
+                L.e(e.getMessage());
             }
             conn.disconnect();
         }
@@ -144,6 +143,7 @@ public class HttpUtils {
         return null;
 
     }
+
     public static void setNoCertificates() {
         try {
             TrustManager[] trustAllCerts = new TrustManager[]{
@@ -151,8 +151,10 @@ public class HttpUtils {
                         public X509Certificate[] getAcceptedIssuers() {
                             return null;
                         }
+
                         public void checkClientTrusted(X509Certificate[] certs, String authType) {
                         }
+
                         public void checkServerTrusted(X509Certificate[] certs, String authType) {
                         }
                     }
@@ -173,6 +175,7 @@ public class HttpUtils {
             e.printStackTrace();
         }
     }
+
     /**
      * 向指定 URL 发送POST方法的请求
      *

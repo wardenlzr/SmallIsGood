@@ -4,14 +4,17 @@ package com.warden.djt;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.warden.lib.base.BaseAct;
+import com.warden.lib.util.AppUtils;
 import com.warden.lib.util.ColorUtils;
 import com.warden.lib.util.HttpUtils;
+import com.warden.lib.util.JsonUtil;
 
 import org.json.JSONObject;
 
@@ -23,7 +26,6 @@ public class MainAct extends BaseAct {
     private RelativeLayout root;
     private TextView tv;
     private ProgressBar pb;
-    private Long time = 0l;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,13 +34,7 @@ public class MainAct extends BaseAct {
         root = findViewById(R.id.root);
         tv = findViewById(R.id.tv);
         pb = findViewById(R.id.pb);
-        root.setOnClickListener(v -> {
-            /*if (AppUtils.isFastClick()) {
-                toast("请勿重复点击");
-                return;
-            }*/
-            getData();
-        });
+        root.setOnClickListener(v -> getData());
         root.setBackgroundColor(ColorUtils.getRandomBGColor());
 
         boolean isDarkMode = (this.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
@@ -52,17 +48,17 @@ public class MainAct extends BaseAct {
             ClipboardUtils.copy(tv.getText().toString());
             toast("内容已复制");
         });*/
-        checkApp();
+        getData();
     }
 
-    private void checkApp() {
+    /*private void checkApp() {
         String url = "http://mockhttp.cn/mock/aaa";
 //        String url = "http://mockhttp.cn/mock/aaa123";
         HttpUtils.doGetAsyn(url, new HttpUtils.CallBack() {
             @Override
             public void ok(String result) {
                 try {
-                    loge(result);
+                    TestBean testBean = JsonUtil.toBean(result, TestBean.class);
                     JSONObject jsonObject = new JSONObject(result);
                     boolean isDemo = jsonObject.getBoolean("isDemo");
                     if (isDemo) {
@@ -78,7 +74,7 @@ public class MainAct extends BaseAct {
 
             }
         });
-    }
+    }*/
 
     //manifest中配置android:configChanges="uiMode"才会走此方法
     @Override
@@ -97,16 +93,21 @@ public class MainAct extends BaseAct {
     }
 
     private boolean change = false;
+
     private void getData() {
         pb.setVisibility(View.VISIBLE);
-        String url = "http://www.iamwawa.cn/home/dujitang/ajax";
+        String url = "https://www.iamwawa.cn/home/dujitang/ajax";
         if (change){
-            url = "http://www.iamwawa.cn/home/lizhi/ajax";
+            url = "https://www.iamwawa.cn/home/lizhi/ajax";
         }
         HttpUtils.doGetAsyn(url, new HttpUtils.CallBack() {
             @Override
             public void ok(String result) {
                 try {
+                    if (TextUtils.isEmpty(result)) {
+                        toast("请求结果为空！");
+                        return;
+                    }
                     change = !change;
                     loge(result);
                     pb.setVisibility(View.GONE);
@@ -120,6 +121,7 @@ public class MainAct extends BaseAct {
                         data = jsonObject.getString("info");
                     }
                     tv.setText(data);
+                    change = !change;
                 } catch (Exception e) {
                     e.printStackTrace();
                     tv.setText("没有毒鸡汤, 好好努力就行了");

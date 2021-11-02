@@ -1,10 +1,11 @@
-include ':test'
+rootProject.name = "SmallIsGood"
 include ':lib'
 
+//include ':test'
 //include ':civilcode'
 //include ':apk1'
 //include ':pkg'
 //include ':lockscreen'
-//include ':djt'
+include ':djt'
 //include ':zds'
-rootProject.name = "SmallIsGood"
+include ':generateQRcode'
