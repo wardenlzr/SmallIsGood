@@ -2,6 +2,7 @@ package com.warden.lib.util;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -50,6 +51,10 @@ public class HttpUtils {
             public void run() {
                 try {
                     String result = doGet(urlStr);
+                    if (TextUtils.isEmpty(result)) {
+                        ToastUtils.toast("网络请求为空！");
+                        return;
+                    }
                     main.post(() -> callBack.ok(result));
                 } catch (Exception e) {
                     e.printStackTrace();
