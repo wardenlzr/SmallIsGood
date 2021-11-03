@@ -21,37 +21,69 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:hint="输入要生成的内容"
-            android:text="面对疾风吧"
             android:padding="16dp"
             android:textSize="18sp"
             tools:ignore="HardcodedText" />
 
-        <Button
-            android:id="@+id/bt_generate"
-            style="@android:style/Widget.DeviceDefault.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="16dp"
-            android:text="生成"
-            android:textSize="18sp"
-            tools:ignore="HardcodedText" />
+
     </LinearLayout>
 
-    <ImageView
-        android:id="@+id/iv"
+    <FrameLayout
         android:layout_marginTop="25dp"
-        android:src="#ddff"
-        android:layout_width="200dp"
-        android:layout_height="200dp"/>
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_generate"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_gravity="center"
+            android:text="生成"
+            android:textColor="@color/bt_color"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:background="@drawable/border_line_while"
+            tools:ignore="HardcodedText" />
+        <ImageView
+            android:id="@+id/iv"
+            android:src="#ddff"
+            android:layout_width="200dp"
+            android:layout_height="200dp"/>
+    </FrameLayout>
+
     <View
         android:layout_width="1dp"
         android:layout_height="0dp"
         android:layout_weight="1"/>
-    <Button
-        android:id="@+id/bt_save"
+    <LinearLayout
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="保存到本地"
-        android:textSize="18sp"
-        tools:ignore="HardcodedText" />
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/tv_save"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:text="保存到本地"
+            android:textColor="@color/bt_color"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:background="@drawable/border_line_while"
+            tools:ignore="HardcodedText" />
+        <TextView
+            android:id="@+id/tv_share"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp"
+            android:text="分享"
+            android:textColor="@color/bt_color"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:background="@drawable/border_line_while"
+            tools:ignore="HardcodedText" />
+
+    </LinearLayout>
 </LinearLayout>

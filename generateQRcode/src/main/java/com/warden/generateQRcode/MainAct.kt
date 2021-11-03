@@ -1,21 +1,25 @@
 package com.warden.generateQRcode
 
 import android.Manifest
+import android.content.ContentResolver
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
+import android.text.Editable
 import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.widget.addTextChangedListener
 import com.bumptech.glide.Glide
 import com.warden.lib.base.BaseAct
 import com.warden.lib.util.*
@@ -37,12 +41,13 @@ class MainAct : BaseAct() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.act_main)
-        bt_generate.setOnClickListener {
+        iv.visibility = View.GONE
+        tv_generate.setOnClickListener {
             if (TextUtils.isEmpty(et.text)) {
                 ToastUtils.toast("请输入要生成的内容")
                 return@setOnClickListener
             }
-            KeyboardUtils.hideSoftInput(bt_save)
+            KeyboardUtils.hideSoftInput(tv_save)
             val url =
                 "https://www.mxnzp.com/api/qrcode/create/single?content=" + et.text + "&app_id=7pvbdvfkmersqpqu&app_secret=bkdYbGYvZTIyYzRRWEliOCtVeUJ6UT09"
             HttpUtils.doGetAsyn(url, object : CallBack {
@@ -51,6 +56,7 @@ class MainAct : BaseAct() {
                     if (bean.code == 1) {
                         qrCodeUrl = bean.data?.qrCodeUrl
                         Glide.with(activity).load(qrCodeUrl).into(iv)
+                        iv.visibility = View.VISIBLE
                     }
 
                 }
@@ -60,13 +66,34 @@ class MainAct : BaseAct() {
                 }
             })
         }
-        bt_save.setOnClickListener {
+        tv_save.setOnClickListener {
             if (TextUtils.isEmpty(qrCodeUrl)) {
                 ToastUtils.toast("请先生成二维码")
                 return@setOnClickListener
             }
             save()
         }
+        tv_share.setOnClickListener {
+            if (TextUtils.isEmpty(qrCodeUrl)) {
+                ToastUtils.toast("请先生成二维码")
+                return@setOnClickListener
+            }
+            share()
+        }
+        et.addTextChangedListener (object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (et.text.toString().isEmpty()) {
+                    iv.visibility = View.GONE
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+        })
     }
 
     override fun onRequestPermissionsResult(
@@ -81,24 +108,28 @@ class MainAct : BaseAct() {
         }
     }
 
-    private fun save() {
-        //检查权限
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED
-        ) {
-            //进入到这里代表没有权限
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                REQUESTCODE
-            )
+    private var imgFile: File? = null
+
+    private fun share() {
+        imgFile = getImgFile()
+        if (imgFile == null) {
+            L.e("imgFile == null")
+            toast("保存失败无法分享")
             return
         }
-        val image = getBitmapByView(iv)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            saveImageToGallery(this, image)
+        val intent = Intent(Intent.ACTION_SEND)
+        val uri = Uri.fromFile(imgFile)
+        intent.putExtra(Intent.EXTRA_STREAM, uri)
+        intent.type = "image/*"
+        startActivity(Intent.createChooser(intent, "share"))
+    }
+
+    private fun save() {
+        imgFile = getImgFile()
+        if (imgFile == null) {
+            toast("保存失败")
         } else {
-            saveImage(image)
+            toast("保存成功")
         }
         /*
         Glide.with(activity)
@@ -112,8 +143,7 @@ class MainAct : BaseAct() {
                     saveImage(resource)
                 }
             })
-        * */
-        /*if (!directory.exists()) {
+        if (!directory.exists()) {
             directory.mkdir()
         }
         val filename = System.currentTimeMillis().toString() + ".png"
@@ -144,6 +174,30 @@ class MainAct : BaseAct() {
         }*/
     }
 
+    private fun getImgFile(): File? {
+        if (imgFile != null) {
+            return imgFile
+        }
+        //检查权限
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            //进入到这里代表没有权限
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                REQUESTCODE
+            )
+            return null
+        }
+        val bitmap = getBitmapByView(iv)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            bitmap2FileForQ(bitmap)
+        } else {
+            bitmap2File(bitmap)
+        }
+    }
+
     private fun getBitmapByView(view: View): Bitmap {
         view.isDrawingCacheEnabled = true
         view.buildDrawingCache()
@@ -152,20 +206,20 @@ class MainAct : BaseAct() {
 
     /**
      * android 11及以上保存图片到相册
-     * @param context
      * @param image
      */
     @RequiresApi(Build.VERSION_CODES.Q)
-    private fun saveImageToGallery(context: Context, image: Bitmap) {
+    private fun bitmap2FileForQ(image: Bitmap): File? {
         val mImageTime = System.currentTimeMillis()
         val mImageFileName = et.text.toString() + "_" + mImageTime + ".png"
         val values = ContentValues();
+        val imgPath = Environment.DIRECTORY_PICTURES + File.separator + "generateQRcode"
         values.put(
-            MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_PICTURES
-                    + File.separator + "generateQRcode"
-        ); //Environment.DIRECTORY_SCREENSHOTS:截图,图库中显示的文件夹名。
-        values.put(MediaStore.MediaColumns.DISPLAY_NAME, mImageFileName);
-        values.put(MediaStore.MediaColumns.MIME_TYPE, "image/png");
+            MediaStore.MediaColumns.RELATIVE_PATH,
+            imgPath
+        ) //Environment.DIRECTORY_SCREENSHOTS:截图,图库中显示的文件夹名。
+        values.put(MediaStore.MediaColumns.DISPLAY_NAME, mImageFileName)
+        values.put(MediaStore.MediaColumns.MIME_TYPE, "image/png")
         values.put(MediaStore.MediaColumns.DATE_ADDED, mImageTime / 1000);
         values.put(MediaStore.MediaColumns.DATE_MODIFIED, mImageTime / 1000);
         values.put(
@@ -174,7 +228,7 @@ class MainAct : BaseAct() {
         );
         values.put(MediaStore.MediaColumns.IS_PENDING, 1);
 
-        val resolver = context.contentResolver;
+        val resolver = this.contentResolver;
         val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         // First, write the actual data for our screenshot
         try {
@@ -187,14 +241,14 @@ class MainAct : BaseAct() {
             values.put(MediaStore.MediaColumns.IS_PENDING, 0);
             values.putNull(MediaStore.MediaColumns.DATE_EXPIRES);
             resolver.update(uri, values, null, null);
-            toast("保存成功")
+            return uriToFile(uri)
         } catch (e: IOException) {
             e.printStackTrace()
-            toast("保存失败")
         }
+        return null
     }
 
-    private fun saveImage(image: Bitmap) {
+    private fun bitmap2File(image: Bitmap): File? {
         val saveImagePath: String
         val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.CHINA);
         // time为转换格式后的字符串
@@ -218,15 +272,77 @@ class MainAct : BaseAct() {
                 fos.close()
                 // Add the image to the system gallery
                 galleryAddPic(saveImagePath)
-                toast("保存成功")
             } catch (e: Exception) {
                 e.printStackTrace()
-                toast("保存失败" + e.message)
+                return null
             }
-        } else toast("保存失败")
+            return imageFile
+        }
+        return null
+    }
+
+    private fun uriToFile(uri: Uri): File? {
+        var path: String? = null
+        if ("file" == uri.scheme) {
+            path = uri.encodedPath
+            if (path != null) {
+                path = Uri.decode(path)
+                val cr: ContentResolver = this.contentResolver
+                val buff = StringBuffer()
+                buff.append("(").append(MediaStore.Images.ImageColumns.DATA).append("=").append(
+                    "'$path'"
+                ).append(")")
+                val cur: Cursor? = cr.query(
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI, arrayOf(
+                        MediaStore.Images.ImageColumns._ID, MediaStore.Images.ImageColumns.DATA
+                    ), buff.toString(), null, null
+                )
+                var index = 0
+                var dataIdx = 0
+                if (cur == null) {
+                    return null
+                }
+                cur.moveToFirst()
+                while (!cur.isAfterLast) {
+                    index = cur.getColumnIndex(MediaStore.Images.ImageColumns._ID)
+                    index = cur.getInt(index)
+                    dataIdx = cur.getColumnIndex(MediaStore.Images.ImageColumns.DATA)
+                    path = cur.getString(dataIdx)
+                    cur.moveToNext()
+                }
+                cur.close()
+                if (index == 0) {
+                } else {
+                    val u = Uri.parse("content://media/external/images/media/$index")
+                    println("temp uri is :$u")
+                }
+            }
+            if (path != null) {
+                return File(path)
+            }
+        } else if ("content" == uri.scheme) {
+            // 4.2.2以后
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            val cursor: Cursor =
+                this.contentResolver.query(uri, proj, null, null, null) ?: return null
+            if (cursor.moveToFirst()) {
+                val columnIndex: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+                path = cursor.getString(columnIndex)
+            }
+            cursor.close()
+            return File(path)
+        } else {
+            L.e("content != uri.scheme")
+            //Log.i(TAG, "Uri Scheme:" + uri.getScheme());
+        }
+        return null
     }
 
     private fun galleryAddPic(imagePath: String?) {
+        if (TextUtils.isEmpty(imagePath)) {
+            L.e("TextUtils.isEmpty(imagePath)")
+            return
+        }
         val mediaScanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
         val f = File(imagePath)
         val contentUri = Uri.fromFile(f)

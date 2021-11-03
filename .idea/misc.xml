@@ -4,7 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Dev/SmallIsGood/civilcode/src/main/res/layout/act_main.xml" value="0.17346014492753623" />
-        <entry key="..\:/Dev/SmallIsGood/generateQRcode/src/main/res/layout/act_main.xml" value="0.19739583333333333" />
+        <entry key="..\:/Dev/SmallIsGood/generateQRcode/src/main/res/drawable/border_line_while.xml" value="0.3697916666666667" />
+        <entry key="..\:/Dev/SmallIsGood/generateQRcode/src/main/res/layout/act_main.xml" value="0.33" />
         <entry key="..\:/Dev/SmallIsGood/qrcode/src/main/res/layout/act_main.xml" value="0.12708333333333333" />
         <entry key="..\:/Dev/SmallIsGood/test/src/main/res/layout/act_circle_img_shot_anim.xml" value="0.19429347826086957" />
         <entry key="..\:/Dev/SmallIsGood/test/src/main/res/layout/act_main.xml" value="0.1671195652173913" />
